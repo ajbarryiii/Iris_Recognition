@@ -2,14 +2,15 @@ import cv2
 import numpy as np
 
 def Iris_localize(img):
+    window = 5
+    kernel = np.ones((window, window),np.uint8)
+    blur_max = cv2.dilate(img, kernel)
+
     # Compute the histogram of the image
-    histogram_x = np.sum(img, axis=0)
+    histogram_x = np.sum(blur_max, axis=0)
     Xp = np.argmin(histogram_x)
 
-    histogram_x = np.sum(img, axis=0)
-    Xp = np.argmin(histogram_x)
-
-    histogram_y = np.sum(img, axis=1)
+    histogram_y = np.sum(blur_max, axis=1)
     Yp = np.argmin(histogram_y)
 
     # Given Xp, Yp from previous computation
