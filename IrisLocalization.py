@@ -2,7 +2,9 @@ import cv2
 import numpy as np
 
 def Iris_localize(img):
-    window = 5
+    
+    #Get maximum value in window
+    window = 7
     kernel = np.ones((window, window),np.uint8)
     blur_max = cv2.dilate(img, kernel)
 
