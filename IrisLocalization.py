@@ -17,24 +17,9 @@ def Iris_localize(img):
 
     # Given Xp, Yp from previous computation
     half_size = 60
-    roi = img[Yp - half_size:Yp + half_size, Xp - half_size:Xp + half_size]
 
-    # Adaptive thresholding
-    binary_roi = cv2.adaptiveThreshold(roi, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 11, 2)
-
-    # Calculate the centroid
-    M = cv2.moments(binary_roi)
-    if M["m00"] != 0:
-        cY = int(M["m10"] / M["m00"])
-        cX = int(M["m01"] / M["m00"])
-    else:
-        cX, cY = 0, 0
-
-    # Updating pupil coordinates based on centroid
-    Xp_new = Xp - half_size + cX
-    Yp_new = Yp - half_size + cY
     #Use a threshhold of 64 to localize the pupil
-    region120 = img[Yp_new-60:Yp_new+60,Xp_new-60:Xp_new+60]
+    region120 = img[Yp - half_size:Yp + half_size, Xp - half_size:Xp + half_size]
     ret,th1 = cv2.threshold(region120,64,65,cv2.THRESH_BINARY)
 
     #Based on the binary image, re-calculate the center of the pupil and estimate
@@ -51,8 +36,7 @@ def Iris_localize(img):
     radius = int((radius1 + radius2) /2)
 
     #compute subimages
-    region240 = img[np.arange(Yp_new-120, min(279, Yp_new+110)),:][:,np.arange(Xp_new-135,min(319,Xp_new+135))]
-    region120 = img[np.arange(Yp_new-60, min(279, Yp_new+60)),:][:,np.arange(Xp_new-60,min(319,Xp_new+60))]
+    region120 = img[np.arange(Yp-60, min(279, Yp+60)),:][:,np.arange(Xp-60,min(319,Xp+60))]
 
 
     for loop in range(1,5):
@@ -63,25 +47,27 @@ def Iris_localize(img):
             pass
     circles = np.around(circles)
 
+
+    image1 = img.copy()
+
+    for i in circles[0,:]:
+        # draw the outer circle
+        cv2.circle(image1,( int(i[0]+ Xp - 60),int(i[1] + Yp - 60)),int(i[2]),(0,255,0),2)
+        # draw the center of the circle
+        cv2.circle(image1,( int(i[0]+ Xp - 60),int(i[1] + Yp - 60)),int(i[2]),(0,255,0),2)
+        innerCircle = [i[0] + Xp - 60,i[1] + Yp -60 ,i[2]]
+
+    #ROI for iris
+    region240 = img[np.arange(innerCircle[1]-120, min(279, innerCircle[1]+110)),:][:,np.arange(innerCircle[0]-135,min(319,innerCircle[0]+135))]
     #gaussian blur for computing Iris boundary
     region240_blur = cv2.GaussianBlur(region240, (5, 5), 0)
     circles1 = cv2.HoughCircles(region240_blur, cv2.HOUGH_GRADIENT,1,250, param1=30,param2=10,minRadius=98,maxRadius=118)
     circles1 = np.around(circles1)                           
 
 
-    image1 = img.copy()
-
-    for i in circles[0,:]:
-        # draw the outer circle
-        cv2.circle(image1,( int(i[0]+ Xp_new - 60),int(i[1] + Yp_new - 60)),int(i[2]),(0,255,0),2)
-        # draw the center of the circle
-        cv2.circle(image1,( int(i[0]+ Xp_new - 60),int(i[1] + Yp_new - 60)),int(i[2]),(0,255,0),2)
-        innerCircle = [i[0] + Xp_new - 60,i[1] + Yp_new -60 ,i[2]]
-
-
     for i in circles1[0,:]:
         # draw the outer circle
-        outerCircle = [int(i[0]+ Xp_new - 135),int(i[1] + Yp_new - 120),i[2]   ]
+        outerCircle = [int(i[0]+ innerCircle[0] - 135),int(i[1] + innerCircle[1] - 120),i[2]   ]
     
     # After computing the innerCircle and outterCircle...
     inner_x, inner_y, inner_r = innerCircle
@@ -91,7 +77,7 @@ def Iris_localize(img):
     distance = np.sqrt((inner_x - outer_x)**2 + (inner_y - outer_y)**2)
 
     # Check if the outer circle's center is outside the inner circle
-    if distance > 15:
+    if distance > 20:
         outerCircle[0] = inner_x
         outerCircle[1] = inner_y
 
