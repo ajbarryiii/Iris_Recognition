@@ -78,11 +78,21 @@ def Iris_localize(img):
 
     for i in circles1[0,:]:
         # draw the outer circle
-        cv2.circle(image1,( int(i[0]+ Xp_new - 135),int(i[1] + Yp_new - 120)),int(i[2]),(0,255,0),2)
-        # draw the center of the circle
-        cv2.circle(image1,( int(i[0]+ Xp_new - 135),int(i[1] + Yp_new - 120)),int(i[2]),(0,255,0),3)
-        outterCircle = [int(i[0]+ Xp_new - 135),int(i[1] + Yp_new - 120),i[2]   ]
+        outerCircle = [int(i[0]+ Xp_new - 135),int(i[1] + Yp_new - 120),i[2]   ]
+    
+    # After computing the innerCircle and outterCircle...
+    inner_x, inner_y, inner_r = innerCircle
+    outer_x, outer_y, outer_r = outerCircle
 
-    return(innerCircle,outterCircle)
+    # Compute the distance between the centers of the two circles
+    distance = np.sqrt((inner_x - outer_x)**2 + (inner_y - outer_y)**2)
+
+    # Check if the outer circle's center is outside the inner circle
+    if distance > 15:
+        outerCircle[0] = inner_x
+        outerCircle[1] = inner_y
+
+
+    return(innerCircle,outerCircle)
 
 
