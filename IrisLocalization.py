@@ -14,18 +14,34 @@ def Iris_localize(img):
 
     histogram_y = np.sum(blur_max, axis=1)
     Yp = np.argmin(histogram_y)
+    # Get the image dimensions
+    height, width = img.shape
 
-    # Given Xp, Yp from previous computation
-    half_size = 60
+    # Ensure the region does not exceed image bounds
+    x_start = max(Xp - 60, 0)
+    x_end = min(Xp + 60, width)
+    y_start = max(Yp - 60, 0)
+    y_end = min(Yp + 60, height)
 
+    # Update Xp, Yp to the center if the region is too small
+    if (x_end - x_start) < 120 or (y_end - y_start) < 120:
+        Xp = width // 2
+        Yp = height // 2
+        x_start = max(Xp - 60, 0)
+        x_end = min(Xp + 60, width)
+        y_start = max(Yp - 60, 0)
+        y_end = min(Yp + 60, height)
+
+    region120 = img[y_start:y_end, x_start:x_end]
+    
     #Use a threshhold of 64 to localize the pupil
-    region120 = img[Yp - half_size:Yp + half_size, Xp - half_size:Xp + half_size]
-    ret,th1 = cv2.threshold(region120,64,65,cv2.THRESH_BINARY)
+    ret,th1 = cv2.threshold(region120,64,255,cv2.THRESH_BINARY)
 
     #Based on the binary image, re-calculate the center of the pupil and estimate
     # the radius of the pupil
-    mask1 = np.where(th1>0,1,0)
-
+    
+    mask1 = np.where(th1 > 0, 1, 0)
+    
     vertical = mask1.sum(axis = 0)
     horizontal = mask1.sum(axis = 1)
 
@@ -33,10 +49,7 @@ def Iris_localize(img):
     minxp = np.argmin(vertical)
     radius1 = (120 - sum(mask1[minyp])) / 2
     radius2 = (120 - np.sum(mask1,axis=0)[minxp]) / 2
-    radius = int((radius1 + radius2) /2)
-
-    #compute subimages
-    region120 = img[np.arange(Yp-60, min(279, Yp+60)),:][:,np.arange(Xp-60,min(319,Xp+60))]
+    radius = max(int((radius1 + radius2) /2), 20)
 
 
     for loop in range(1,5):
@@ -55,10 +68,19 @@ def Iris_localize(img):
         cv2.circle(image1,( int(i[0]+ Xp - 60),int(i[1] + Yp - 60)),int(i[2]),(0,255,0),2)
         # draw the center of the circle
         cv2.circle(image1,( int(i[0]+ Xp - 60),int(i[1] + Yp - 60)),int(i[2]),(0,255,0),2)
-        innerCircle = [i[0] + Xp - 60,i[1] + Yp -60 ,i[2]]
+        innerCircle = [int(i[0] + Xp - 60),int(i[1] + Yp -60) ,int(i[2])]
+
 
     #ROI for iris
-    region240 = img[np.arange(innerCircle[1]-120, min(279, innerCircle[1]+110)),:][:,np.arange(innerCircle[0]-135,min(319,innerCircle[0]+135))]
+    # Ensure the start and end are integers
+    start_y = int(max(0, innerCircle[1] - 120))
+    end_y = int(min(height, innerCircle[1] + 120))
+    start_x = int(max(0, innerCircle[0] - 120))
+    end_x = int(min(width, innerCircle[0] + 120))
+
+    # ROI for iris
+    region240 = img[start_y:end_y, start_x:end_x]
+
     #gaussian blur for computing Iris boundary
     region240_blur = cv2.GaussianBlur(region240, (5, 5), 0)
     circles1 = cv2.HoughCircles(region240_blur, cv2.HOUGH_GRADIENT,1,250, param1=30,param2=10,minRadius=98,maxRadius=118)
@@ -67,7 +89,7 @@ def Iris_localize(img):
 
     for i in circles1[0,:]:
         # draw the outer circle
-        outerCircle = [int(i[0]+ innerCircle[0] - 135),int(i[1] + innerCircle[1] - 120),i[2]   ]
+        outerCircle = [int(i[0]+ innerCircle[0] - 135),int(i[1] + innerCircle[1] - 120),int(i[2])   ]
     
     # After computing the innerCircle and outterCircle...
     inner_x, inner_y, inner_r = innerCircle
@@ -77,9 +99,11 @@ def Iris_localize(img):
     distance = np.sqrt((inner_x - outer_x)**2 + (inner_y - outer_y)**2)
 
     # Check if the outer circle's center is outside the inner circle
-    if distance > 20:
+    if distance > 15:
         outerCircle[0] = inner_x
         outerCircle[1] = inner_y
+
+    cv2.circle(image1,( outerCircle[0],outerCircle[1]),int(outerCircle[2]),(0,255,0),2)
 
 
     return(innerCircle,outerCircle)
