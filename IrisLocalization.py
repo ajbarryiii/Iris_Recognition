@@ -60,14 +60,8 @@ def Iris_localize(img):
             pass
     circles = np.around(circles)
 
-
-    image1 = img.copy()
-
     for i in circles[0,:]:
-        # draw the outer circle
-        cv2.circle(image1,( int(i[0]+ Xp - 60),int(i[1] + Yp - 60)),int(i[2]),(0,255,0),2)
-        # draw the center of the circle
-        cv2.circle(image1,( int(i[0]+ Xp - 60),int(i[1] + Yp - 60)),int(i[2]),(0,255,0),2)
+        #compute the pupil ciricle
         innerCircle = [int(i[0] + Xp - 60),int(i[1] + Yp -60) ,int(i[2])]
 
 
@@ -88,7 +82,7 @@ def Iris_localize(img):
 
 
     for i in circles1[0,:]:
-        # draw the outer circle
+        # compute the outer circle
         outerCircle = [int(i[0]+ innerCircle[0] - 135),int(i[1] + innerCircle[1] - 120),int(i[2])   ]
     
     # After computing the innerCircle and outterCircle...
@@ -102,8 +96,6 @@ def Iris_localize(img):
     if distance > 15:
         outerCircle[0] = inner_x
         outerCircle[1] = inner_y
-
-    cv2.circle(image1,( outerCircle[0],outerCircle[1]),int(outerCircle[2]),(0,255,0),2)
 
 
     return(innerCircle,outerCircle)
