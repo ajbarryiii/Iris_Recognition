@@ -26,16 +26,41 @@ def process_iris(file_name):
     feature_vector = get_feature_vector(filtered_im1, filtered_im2)
     return feature_vector
 
-# create the data frame for training data and testing data
+# function for adding zeros so the database can be created
+def add_leading_zeros(number):
+    # Convert the number to a string
+    number_str = str(number)
+    
+    # Calculate the number of zeros to add
+    num_zeros_to_add = 3 - len(number_str)
+    
+    # Add leading zeros and return as a string
+    result_str = '0' * num_zeros_to_add + number_str
+    return result_str
+# create the functions that create the data frame for training data and testing data
+def create_training_data():
+    training_vector = []
+    for i in np.arange(1,109):
+        for j in np.arange(1,4):
+            file = "./CASIA Iris Image Database (version 1.0)/" + add_leading_zeros(i) +"/1/" + add_leading_zeros(i)+ "_1_" + str(j)+ ".bmp"
+            processed_vec = process_iris(file)
+            training_vector.append(processed_vec)
+    return training_vector
 
-
-
+def create_test_data():
+    testing_vector = []
+    for i in np.arange(1,109):
+        for j in np.arange(1,4):
+            file = "./CASIA Iris Image Database (version 1.0)/" + add_leading_zeros(i) +"/2/" + add_leading_zeros(i)+ "_2_" + str(j)+ ".bmp"
+            processed_vec = process_iris(file)
+            testing_vector.append(processed_vec) 
+    return testing_vector
 
 def IrisMatching(training_data ,testing_data ,LDADimention=107,distanceMeasure=3):
     X_train = np.array(training_data)
     X_test  = np.array(testing_data)
     irisY = np.arange(1,109)
-    Y_train = np.repeat(irisY,3*7)
+    Y_train = np.repeat(irisY,3)
     Y_test = np.repeat(irisY,4)
     trainClass = np.repeat(irisY,3)
     
