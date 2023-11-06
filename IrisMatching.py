@@ -90,18 +90,18 @@ def IrisMatching(training_data ,testing_data ,LDA_components=107,distanceMeasure
         # this will store the distance each training sample is from the current test data
         dist_vector = np.zeros(int(X_train.shape[0]))
         # set the current test sample to be the feature vector of the current sample
-        current_test_sample = Test_reduced[i:i+1]
+        current_test_sample = Test_reduced[i]
         # for every training sample measure the distance of the current test data sample from that training data sample
         for j in range(len(dist_vector)):
             # if cosine distance is specified use the cosine distance
             if distanceMeasure ==3:
-                distance = scipy.spatial.distance.cosine(current_test_sample,Train_reduced[j:j+1])
+                distance = scipy.spatial.distance.cosine(current_test_sample,Train_reduced[j])
               # if l1 distance is specified use the l1 distance  
             elif distanceMeasure ==1:
-                distance = scipy.spatial.distance.cityblock(current_test_sample,Train_reduced[j:j+1])
+                distance = scipy.spatial.distance.cityblock(current_test_sample,Train_reduced[j])
                 # if eucidean distance is specified use the l2 distance 
             else:
-                distance = scipy.spatial.distance.sqeuclidean(current_test_sample,Train_reduced[j:j+1])
+                distance = scipy.spatial.distance.sqeuclidean(current_test_sample,Train_reduced[j])
            # store the distance in the distance vector
             dist_vector[j] = distance
         # set the prediction for the ith element of the test data to be the ID of the nearest training data    
