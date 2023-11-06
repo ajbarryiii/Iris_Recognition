@@ -50,7 +50,7 @@ def create_training_data():
 def create_test_data():
     testing_vector = []
     for i in np.arange(1,109):
-        for j in np.arange(1,4):
+        for j in np.arange(1,5):
             file = "./CASIA Iris Image Database (version 1.0)/" + add_leading_zeros(i) +"/2/" + add_leading_zeros(i)+ "_2_" + str(j)+ ".bmp"
             processed_vec = process_iris(file)
             testing_vector.append(processed_vec) 
