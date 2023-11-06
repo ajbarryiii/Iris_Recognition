@@ -3,12 +3,13 @@ import numpy as np
 
 def Iris_localize(img):
     
-    #Get maximum value in window
+    #Get maximum value in window.
+    # Without this step found that initialization on pupil was suboptimal, this greatly improved the model's ability to recognize the pupil.
     window = 9
     kernel = np.ones((window, window),np.uint8)
     blur_max = cv2.dilate(img, kernel)
 
-    # Compute the histogram of the image
+    # Compute the histogram of the image using max kernel
     histogram_x = np.sum(blur_max, axis=0)
     Xp = np.argmin(histogram_x)
 
