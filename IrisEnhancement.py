@@ -26,7 +26,7 @@ def iris_enhancement(img):
   # create an empty array variable called bicubic_interpolated_means to store the block means bicubically interpolated 
   # to the size of the original image shape
   
-  bicubic_interpolated_means = np.empty((rows, cols), dtype=np.float32)
+  bicubic_interpolated_means = np.empty((rows, columns), dtype=np.float32)
   
   # reshape the block means to a 2D array with the shape of the number of blocks in both rows and columns
   block_means_array = np.array(block_means).reshape(num_rows, num_cols)
