@@ -26,7 +26,7 @@ def getCRRCurve(train,test):
     plt.figure()
     for i in range(len(dimension)):
         print('Currently computing dimension %d' %dimension[i])
-        vec.append(IrisMatching(train,test,dimension[i]))
+        vec.append(IrisMatching(training_data=train,testing_data=test,LDA_components=dimension[i]))
     lw = 2
 
     plt.plot(dimension, vec, color='darkorange',lw=lw)
@@ -56,7 +56,7 @@ def getPCACurve(train,test):
         for i in range(len(dimension)):
             ans = []
             print('Currently computing dimension %d' %dimension[i])
-            ans.append(IrisMatching(train,test,dimension[i]))
+            ans.append(IrisMatching(training_data=train,testing_data=test,LDA_components= dimension[i]))
         vec.append(min(ans))
     lw = 2
 
@@ -77,7 +77,7 @@ def getTable(train,test):
     for i in range(1,4):
         print('Currently computing distance measure number %d' %i)
         for dim in range(2):
-            vec.append(IrisMatching(train,test,LDADimention=dimension[dim],distanceMeasure=i))
+            vec.append(IrisMatching(train,test,LDA_components=dimension[dim],distanceMeasure=i))
     vec = np.array(vec).reshape(3,2)
     vec = pd.DataFrame(vec)
     vec.index = ['L1 distance measure', 'L2 distance measure','Cosine similarity measure']

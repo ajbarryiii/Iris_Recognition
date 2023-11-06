@@ -15,9 +15,9 @@ from IrisMatching      import *
 from IrisPerformanceEvaluation import *
 
 
+
 def main():
     runAll_test()
-    
 
 
 # This function would run all the algorithm step by step including IrisLocalization,
@@ -52,23 +52,7 @@ def runAll():
     a = getTable(train,test)
 
 def runAll_test():
-    try:
-        # Run the algorithm for all training and testing images and save the result
-        trainBase = create_training_data()
-        testBase = create_test_data()
-    except Exception as e:
-        print(f"Error during training data creation: {e}")
-        raise
-    
-    try:
-        irisTrain = np.array(trainBase)
-        np.save('irisTrain', irisTrain)
-        irisTest = np.array(testBase)
-        np.save('irisTest', irisTest)
-    except Exception as e:
-        print(f"Error during array conversion or saving: {e}")
-        raise
-    
+
     try:
         # After transferring the image into a vector, get performance evaluation by
         # calculating Accuracy curve for different PCA dimension reduction,
@@ -101,3 +85,7 @@ def runAll_test():
     except Exception as e:
         print(f"Error generating recognition results table: {e}")
         raise
+
+# Call the main function
+if __name__ == "__main__":
+    main()
