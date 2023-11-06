@@ -94,8 +94,8 @@ def Iris_localize(img):
 
     # Check if the outer circle's center is outside the inner circle
     if distance > 15:
-        outerCircle[0] = inner_x + 1
-        outerCircle[1] = inner_y + 1
+        outerCircle[0] = inner_x + np.sign(outerCircle[0]-inner_x) # add sgn(o-i) to preserve (some) directionality
+        outerCircle[1] = inner_y + np.sign(outerCircle[1]-inner_y) 
 
 
     return(innerCircle,outerCircle)
