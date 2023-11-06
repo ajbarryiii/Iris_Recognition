@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 from sklearn.decomposition import PCA
-from sklearn.neighbors.nearest_centroid import NearestCentroid
+from sklearn.neighbors import NearestCentroid
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis as LDA
 
 from IrisLocalization  import *
