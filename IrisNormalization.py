@@ -21,7 +21,7 @@ def transform_xy(X, Y, inner, outer):
 
     diff_angle = np.arctan(((y2-y1) / (x2-x1)))
     long_r = (2 * distance * np.cos(diff_angle) +
-              np.sqrt((2 * distance * np.cos(diff_angle)) ** 2 - 4 * (distance**2 - r1**2))) / 2
+              np.sqrt((2 * distance * np.cos(diff_angle)) ** 2 - 4 * (distance**2 - r2**2))) / 2
 
     x_i = x1 + r1 * np.cos(theta)
     y_i = y1 + r1 * np.sin(theta)
