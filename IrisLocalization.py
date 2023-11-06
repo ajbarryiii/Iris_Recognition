@@ -51,7 +51,7 @@ def Iris_localize(img):
     radius2 = (120 - np.sum(mask1,axis=0)[minxp]) / 2
     radius = max(int((radius1 + radius2) /2), 20)
 
-
+    #Hough Circles for pupil
     for loop in range(1,5):
         circles = cv2.HoughCircles(region120,cv2.HOUGH_GRADIENT,1,250, param1=50,param2=10,minRadius=(radius-loop),maxRadius=(radius+loop))
         if type(circles) != type(None):
@@ -94,8 +94,8 @@ def Iris_localize(img):
 
     # Check if the outer circle's center is outside the inner circle
     if distance > 15:
-        outerCircle[0] = inner_x + np.finfo(float).eps*(outerCircle[0]-inner_x)
-        outerCircle[1] = inner_y + np.finfo(float).eps*(outerCircle[1]-inner_x)
+        outerCircle[0] = inner_x + 1
+        outerCircle[1] = inner_y + 1
 
 
     return(innerCircle,outerCircle)

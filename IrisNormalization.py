@@ -14,8 +14,8 @@ def transform_xy(X, Y, inner, outer):
     y2 = outer[1]
     r2 = outer[2]
 
-    p1 = np.array(x1, y1)
-    p2 = np.array(x2, y2)
+    p1 = np.array([x1, y1])
+    p2 = np.array([x2, y2])
 
     distance = np.linalg.norm(p1-p2)
 
