@@ -3,7 +3,7 @@ import cv2
 import scipy.signal
 
 
-def get_kernal(x, y, theta=0, l=10, psi=10, ksize=9):
+def get_kernel(x, y, theta=0, l=10, psi=10, ksize=9):
 
     gamma = x / y
     kernel = cv2.getGaborKernel((ksize, ksize), x, theta, l, gamma, psi, ktype=cv2.CV_64F)
@@ -13,7 +13,7 @@ def get_kernal(x, y, theta=0, l=10, psi=10, ksize=9):
 def filter_image(image, x, y):
 
     image = image[0:48, :]
-    kernel = get_kernal(x, y)
+    kernel = get_kernel(x, y)
     new = scipy.signal.convolve2d(image, kernel, mode='same')
 
     return new
