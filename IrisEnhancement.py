@@ -1,8 +1,8 @@
 import numpy as np
 import cv2
 def iris_enhancement(img):
-  # convert input to grayscale image
-  img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+  # convert input to grayscale image 
+  #img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY) commented out as this is not needed providing the input is in grayscale
   # get the number of rows and columns from the image
   rows, columns = img.shape
   # set the block_size variable to be the length/width in pixels for each block constituent of the image
@@ -49,6 +49,9 @@ def iris_enhancement(img):
   enhanced_image = np.copy(partially_enhanced)
   # set the height and width variables using the shape method
   height, width = enhanced_image.shape
+  # make sure the enhanced_image data type is the correct 8-bit depth for the equalizeHist function to work
+  if enhanced_image.dtype != np.uint8:
+    enhanced_image = cv2.convertScaleAbs(enhanced_image)
   # create a new variable for region size called "region_size" which is 2*block_size as the Li paper uses 32x32 regions (block size is 16 in the paper)
   region_size = block_size*2
   # instantiate a double for loop that goes through each region_size by region_size block of the image
