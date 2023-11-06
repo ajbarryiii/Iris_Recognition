@@ -1,0 +1,17 @@
+Team Member 1: A.J. Barry: irisLocalization, irisRecognition, irisPerformanceEvaluation
+Team Member 2: Patrick Connolly: irisMatching, irisEnhancement
+Team Member 3: Daniel Koppel: irisFeatureExtraction, irisNormalization
+
+The overall design of our code was influenced by two sources: the paper, and a repo linked below. The code starts off by locating the iris, using Gaussian blur to compute the iris boundary and Hough Circles for the pupil. Next, the inner and outer circle coordinates are then transformed from the Cartesian system into the polar system. This was done by utilizing the equations defined in the paper, and subsequently looping over every pixel in the image to transform its coordinates. The image is then enhanced before feature extraction. Feature extraction is then performed using a Gabor kernel, and the feature vectors are returned.
+
+###
+
+Add details about performance
+
+###
+
+Overall, our model performed ____.
+
+A key constraint we encountered was the Gabor kernel used for feature extraction. We used default parameters in order to create the kernel, but it is likely that performance could be improved by doing some form of hyperparameter tuning, in order to find the optimal parameters for the kernel.
+
+Additionally, more images to train the model would likely result in increased accuracy. 
