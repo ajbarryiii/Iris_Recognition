@@ -3,6 +3,8 @@ import numpy as np
 
 def transform_xy(X, Y, inner, outer):
 
+    # create normalized image
+
     (M, N) = (64, 512)
     theta = 2 * np.pi * X / N
 
@@ -17,9 +19,16 @@ def transform_xy(X, Y, inner, outer):
     p1 = np.array([x1, y1])
     p2 = np.array([x2, y2])
 
+    # find distance between points
+
     distance = np.linalg.norm(p1-p2)
 
+    # find angle between points
+
     diff_angle = np.arctan(((y2-y1) / (x2-x1)))
+
+    # find radius of iris
+    
     long_r = (2 * distance * np.cos(diff_angle) +
               np.sqrt((2 * distance * np.cos(diff_angle)) ** 2 - 4 * (distance**2 - r2**2))) / 2
 
@@ -29,6 +38,8 @@ def transform_xy(X, Y, inner, outer):
     x_o = x1 + long_r * np.cos(theta)
     y_o = y1 + long_r * np.sin(theta)
 
+    # transform x and y
+
     x = int(x_i + (x_o - x_i) * Y / M)
     y = int(y_i + (y_o - y_i) * Y / M)
 
@@ -37,6 +48,7 @@ def transform_xy(X, Y, inner, outer):
 
     return x, y
 
+# normalize image utilizing above function
 
 def normalize_image(image, inner, outer):
 

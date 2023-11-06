@@ -3,12 +3,15 @@ import cv2
 import scipy.signal
 
 
+# create kernel based on predefined params
+
 def get_kernel(x, y, theta=0, l=10, psi=10, ksize=9):
 
     gamma = x / y
     kernel = cv2.getGaborKernel((ksize, ksize), x, theta, l, gamma, psi, ktype=cv2.CV_64F)
     return kernel
 
+# filter image
 
 def filter_image(image, x, y):
 
@@ -20,15 +23,15 @@ def filter_image(image, x, y):
 
 
 def calculate_features(image, block_size=8):
-    # Calculate the number of blocks in each dimension
+    # calculate the number of blocks in each dimension
     rows, cols = image.shape[:2]
     rows //= block_size
     cols //= block_size
 
-    # Pre-allocate the feature vector
+    # create feature vector
     features = np.zeros((rows, cols, 2), dtype=np.float64)
 
-    # Vectorized computation over blocks
+    # compute over blocks
     for row in range(rows):
         for col in range(cols):
             block = image[row * block_size: (row + 1) * block_size,
