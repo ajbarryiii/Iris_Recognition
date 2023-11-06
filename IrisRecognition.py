@@ -16,13 +16,13 @@ from IrisPerformanceEvaluation import *
 
 
 def main():
-    runAll()
+    runAll_test()
     
 
 
 # This function would run all the algorithm step by step including IrisLocalization,
-# IrisNormalization, ImageEnhancement, Feature Extraction, IrisMatching, 
-# and PerformanceEnvaluation.
+# IrisNormalization, IrisEnhancement, IrisFeatureExtraction, IrisMatching, 
+# and IrisPerformanceEnvaluation.
 
 # In addition to the LDA plot required by the project, I did PCA for dimension 
 # reduction and ploted accuracy curve for different PCA dimensions
@@ -51,3 +51,53 @@ def runAll():
     # Draw a table for recognition results using different similarity measures
     a = getTable(train,test)
 
+def runAll_test():
+    try:
+        # Run the algorithm for all training and testing images and save the result
+        trainBase = create_training_data()
+        testBase = create_test_data()
+    except Exception as e:
+        print(f"Error during training data creation: {e}")
+        raise
+    
+    try:
+        irisTrain = np.array(trainBase)
+        np.save('irisTrain', irisTrain)
+        irisTest = np.array(testBase)
+        np.save('irisTest', irisTest)
+    except Exception as e:
+        print(f"Error during array conversion or saving: {e}")
+        raise
+    
+    try:
+        # After transferring the image into a vector, get performance evaluation by
+        # calculating Accuracy curve for different PCA dimension reduction,
+        # CRR Curve, and recognition results tables.
+        train = np.load('irisTrain.npy')
+        test = np.load('irisTest.npy')
+    except Exception as e:
+        print(f"Error loading numpy arrays: {e}")
+        raise
+    
+    try:
+        # Plot accuracy curve for different dimension reduction using PCA
+        # This line seems to be incomplete or incorrect. It's just (train, test) which doesn't do anything.
+        # There should be a function call here instead.
+        pass  # Replace with actual plotting code
+    except Exception as e:
+        print(f"Error during PCA accuracy curve plotting: {e}")
+        raise
+    
+    try:
+        # Plot accuracy curve for different dimensionality of the LDA
+        getCRRCurve(train, test)
+    except Exception as e:
+        print(f"Error during CRR curve generation: {e}")
+        raise
+    
+    try:
+        # Draw a table for recognition results using different similarity measures
+        a = getTable(train, test)
+    except Exception as e:
+        print(f"Error generating recognition results table: {e}")
+        raise
