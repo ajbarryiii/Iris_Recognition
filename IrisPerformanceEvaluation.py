@@ -1,3 +1,5 @@
+
+
 import numpy as np
 import cv2
 import matplotlib.pyplot as plt
@@ -14,86 +16,76 @@ from IrisFeatureExtraction import *
 from IrisMatching import *
 
 
-def table_CRR(train_features, train_classes, test_features, test_classes):
-    # Assuming IrisMatching takes the features and classes as input
-    # This method should generate a table of CRR based on different similarity measures
+# This function plots the recognition results using features of different 
+# dimensionality
+def getCRRCurve(train,test):
     vec = []
-    dimensions = [100, 107]
-    for i in range(1, 4):
-        print(f'Currently computing distance measure number {i}')
-        for dim in dimensions:
-            vec.append(IrisMatching(train_features, test_features, LDA_dimension=dim, distance_measure=i))
-    vec = np.array(vec).reshape(3, 2)
-    df = pd.DataFrame(vec, index=['L1 distance measure', 'L2 distance measure', 'Cosine similarity measure'],
-                        columns=['Original Feature Set', 'Reduced Feature Set'])
-    return df
-
-def performance_evaluation( train_features, train_classes, test_features, test_classes):
-    # This method should plot the CRR curve for different PCA dimensions and LDA configurations
-    vec = []
-    dimensions = [50, 60, 70, 80, 90, 100, 107]
+    # dimension could also be changed into any integer between 1 and 107, I chose
+    # these as samples 
+    dimension = [50,60,70,80,90,100,107]
     plt.figure()
-    for dim in dimensions:
-        print(f'Currently computing dimension {dim}')
-        crr_value = IrisMatching(train_features, test_features, LDA_dimension=dim)
-        vec.append(crr_value)
+    for i in range(len(dimension)):
+        print('Currently computing dimension %d' %dimension[i])
+        vec.append(IrisMatching(train,test,dimension[i]))
     lw = 2
-    plt.plot(dimensions, vec, color='darkorange', lw=lw)
+
+    plt.plot(dimension, vec, color='darkorange',lw=lw)
     plt.xlabel('Dimensionality of the feature vector')
-    plt.ylabel('Correct recognition rate')
+    plt.ylabel('Correct recgnition rate')
     plt.title('Recognition results using features of different dimensionality')
-    plt.scatter(dimensions, vec, marker='*')
+    plt.scatter(dimension,vec,marker='*')
+
     plt.show()
 
-def FM_FNM_table(fmrs_mean, fmrs_l, fmrs_u, fnmrs_mean, fnmrs_l, fnmrs_u, thresholds):
-    
-    print("False Match and False Nonmatch Rates with Different Threshold Values")
-    # Prepare data in a format suitable for DataFrame
-    data = {
-        'Threshold': thresholds[7:10],
-        'False match rate(%)': [
-            f"{fmrs_mean[i]}[{fmrs_l[i]},{fmrs_u[i]}]" for i in range(7, 10)
-        ],
-        "False non-match rate(%)": [
-            f"{fnmrs_mean[i]}[{fnmrs_l[i]},{fnmrs_u[i]}]" for i in range(7, 10)
-        ]
-    }
-    
-    # Create DataFrame
-    df = pd.DataFrame(data)
-    
-    # Set the display.max_colwidth to -1 to show all text in a column
-    pd.set_option('display.max_colwidth', None)
-    
-    # Print DataFrame without the index
-    print(df.to_string(index=False))
-
-def FMR_conf(fmrs_mean,fmrs_l,fmrs_u,fnmrs_mean,fnmrs_l,fnmrs_u):
+# Similar to getCRRCurve(), this function plots the accuracy rate for different
+# dimensions for PCA. Within each PCA dimension, the maximum accuracy rate was 
+# calculated by trying LDA dimensions of 90,100,107 which approves to be the dimensions
+# with highest accuracy rate in general
+def getPCACurve(train,test):
+    train1 = train.copy()
+    test1 = test.copy()
+    vec = []
+    pca = [400,550,600,650,1000]
+    dimension = [90,100,107]
     plt.figure()
+    for p in range(len(pca)):
+        thisPCA = PCA(n_components=pca[p])
+        thisPCA.fit(train1)
+        train = thisPCA.transform(train1)
+        test  = thisPCA.transform(test1)
+        for i in range(len(dimension)):
+            ans = []
+            print('Currently computing dimension %d' %dimension[i])
+            ans.append(IrisMatching(train,test,dimension[i]))
+        vec.append(min(ans))
     lw = 2
-    plt.plot(fmrs_mean, fnmrs_mean, color='navy', lw=lw, linestyle='-')
-    plt.plot(fmrs_l, fnmrs_mean, color='navy', lw=lw, linestyle='--')
-    plt.plot(fmrs_u, fnmrs_mean, color='navy', lw=lw, linestyle='--')
-    plt.xlim([0.0, 60])
-    plt.ylim([0.0,40])
-    plt.xlabel('False Match Rate(%)')
-    plt.ylabel('False Non_match Rate(%)')
-    plt.title('FMR Confidence Interval')
-    plt.savefig('figure_13_a.png')
-    plt.show()
-    
-def FNMR_conf(fmrs_mean,fmrs_l,fmrs_u,fnmrs_mean,fnmrs_l,fnmrs_u):
-    plt.figure()
-    lw = 2
-    plt.plot(fmrs_mean, fnmrs_mean, color='navy', lw=lw, linestyle='-')
-    plt.plot(fmrs_mean, fnmrs_l, color='navy', lw=lw, linestyle='--')
-    plt.plot(fmrs_mean, fnmrs_u, color='navy', lw=lw, linestyle='--')
-    plt.xlim([0.0, 100])
-    plt.ylim([0.0,40])
-    plt.xlabel('False Match Rate(%)')
-    plt.ylabel('False Non_match Rate(%)')
-    plt.title('FNMR Confidence Interval')
-    plt.savefig('figure_13_b.png')
+
+    plt.plot(pca, vec, color='darkorange',lw=lw)
+    plt.xlabel('Dimensionality of the feature vector')
+    plt.ylabel('Correct recgnition rate')
+    plt.title('Recognition results using features of different dimensionality')
+    plt.scatter(pca,vec,marker='*')
+
     plt.show()
 
+
+# This function prints the table of recognition results using different 
+# similarity measures
+def getTable(train,test):
+    vec = []
+    dimension = [100,107]
+    for i in range(1,4):
+        print('Currently computing distance measure number %d' %i)
+        for dim in range(2):
+            vec.append(IrisMatching(train,test,LDADimention=dimension[dim],distanceMeasure=i))
+    vec = np.array(vec).reshape(3,2)
+    vec = pd.DataFrame(vec)
+    vec.index = ['L1 distance measure', 'L2 distance measure','Cosine similarity measure']
+    vec.columns = ['Original Feature Set', 'Reduced Feature Set']
+    print(vec)
+    return vec
+
+
+    
+    
     
