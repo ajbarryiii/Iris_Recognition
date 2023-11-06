@@ -32,6 +32,8 @@ def transform_xy(X, Y, inner, outer):
     long_r = (2 * distance * np.cos(diff_angle) +
               np.sqrt((2 * distance * np.cos(diff_angle)) ** 2 - 4 * (distance**2 - r2**2))) / 2
 
+    # calculate inner and outer points 
+    
     x_i = x1 + r1 * np.cos(theta)
     y_i = y1 + r1 * np.sin(theta)
 
@@ -51,6 +53,8 @@ def transform_xy(X, Y, inner, outer):
 # normalize image utilizing above function
 
 def normalize_image(image, inner, outer):
+
+    # looping over every pixel to transform its coordiates
 
     new = np.zeros((64, 512))
     for Y in range(64):
