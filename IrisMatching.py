@@ -63,7 +63,7 @@ def create_test_data():
 
 # create an IrisMatching function that takes in a training and testing data set and a number of LDA components and
 # a distance measure 3= cosine measure, 1 = manhattan, and 2 = eucidean
-def IrisMatching(training_data ,testing_data ,LDA_components=107,distanceMeasure=3):
+def IrisMatching(training_data ,testing_data ,LDA_components,distanceMeasure):
     # make sure the training and testing data are np.arrays and not lists
     X_train = np.array(training_data)
     X_test  = np.array(testing_data)
