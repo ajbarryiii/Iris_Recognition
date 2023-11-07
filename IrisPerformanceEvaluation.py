@@ -18,25 +18,36 @@ from IrisMatching import *
 
 # This function plots the recognition results using features of different 
 # dimensionality
-def getCRRCurve(train,test):
-    vec = []
-    # dimension could also be changed into any integer between 1 and 107, I chose
-    # these as samples 
-    dimension = [50,60,70,80,90,100,107]
+def getCRRCurve(train, test):
+    # Assuming distance metrics are numbered 1, 2, and 3 for example purposes.
+    distance_metrics = [1, 2, 3]
+    dimension = [50, 60, 70, 80, 90, 100, 107]
+
+    # Prepare the plot
     plt.figure()
-    for i in range(len(dimension)):
-        print('Currently computing dimension %d' %dimension[i])
-        vec.append(IrisMatching_Rotation(rotated_training_data=train,testing_data=test,LDA_components=dimension[i], distanceMeasure=3))
+    markers = ['o', 's', '*', 'x']  # Different markers for each distance metric
+    colors = ['darkorange', 'navy', 'green', 'red']  # Different colors for each distance metric
     lw = 2
 
-    plt.plot(dimension, vec, color='darkorange',lw=lw)
+    # For each distance metric, calculate the CRRCurve
+    for metric_idx, metric in enumerate(distance_metrics):
+        vec = []
+        for dim in dimension:
+            print(f'Computing dimension {dim} with distance metric {metric}')
+            # I'm assuming this function returns a value representing the correct recognition rate
+            crr = IrisMatching_Rotation(rotated_training_data=train, testing_data=test, LDA_components=dim, distanceMeasure=metric)
+            vec.append(crr)
+
+        # Plot the results for this metric
+        plt.plot(dimension, vec, color=colors[metric_idx], lw=lw, marker=markers[metric_idx], label=f'Distance Metric {metric}')
+
+    # Configure and show the plot
     plt.xlabel('Dimensionality of the feature vector')
-    plt.ylabel('Correct recgnition rate')
+    plt.ylabel('Correct recognition rate')
     plt.title('Recognition results using features of different dimensionality')
-    plt.scatter(dimension,vec,marker='*')
-
+    plt.legend()
     plt.show()
-
+    
 # Similar to getCRRCurve(), this function plots the accuracy rate for different
 # dimensions for PCA. Within each PCA dimension, the maximum accuracy rate was 
 # calculated by trying LDA dimensions of 90,100,107 which approves to be the dimensions
@@ -86,7 +97,7 @@ def getTable(train,test):
     return vec
 
 
-def getPCA(train, test, pca_component=110):
+def getPCA(train, test, pca_component=500):
     train1 = train.copy()
     test1 = test.copy()
     

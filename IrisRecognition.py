@@ -65,7 +65,7 @@ def runAll_test():
     
     try:
         # Plot accuracy curve for different dimensionality of the LDA
-        getPCA(train, test)
+        getCRRCurve(train, test)
     except Exception as e:
         print(f"Error during PCA curve generation: {e}")
         raise
