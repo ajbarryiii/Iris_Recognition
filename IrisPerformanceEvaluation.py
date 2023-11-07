@@ -26,7 +26,7 @@ def getCRRCurve(train,test):
     plt.figure()
     for i in range(len(dimension)):
         print('Currently computing dimension %d' %dimension[i])
-        vec.append(IrisMatching(training_data=train,testing_data=test,LDA_components=dimension[i]))
+        vec.append(IrisMatching(training_data=train,testing_data=test,LDA_components=dimension[i], distanceMeasure=3))
     lw = 2
 
     plt.plot(dimension, vec, color='darkorange',lw=lw)
@@ -56,7 +56,7 @@ def getPCACurve(train,test):
         for i in range(len(dimension)):
             ans = []
             print('Currently computing dimension %d' %dimension[i])
-            ans.append(IrisMatching(training_data=train,testing_data=test,LDA_components= dimension[i]))
+            ans.append(IrisMatching(training_data=train,testing_data=test,LDA_components= dimension[i], distanceMeasure=3))
         vec.append(min(ans))
     lw = 2
 
