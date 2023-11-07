@@ -17,7 +17,7 @@ from IrisPerformanceEvaluation import *
 
 
 def main():
-    runAll_test()
+    runAll()
 
 
 # This function would run all the algorithm step by step including IrisLocalization,
@@ -49,7 +49,7 @@ def runAll():
     getCRRCurve(train,test)
     
     # Draw a table for recognition results using different similarity measures
-    a = getTable(train,test)
+    getTable(train,test)
 
 def runAll_test():
 
