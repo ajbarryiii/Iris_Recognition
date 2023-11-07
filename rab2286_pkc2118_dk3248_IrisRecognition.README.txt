@@ -24,8 +24,6 @@ Overall, when we combine PCA and LDA, our model reaches 80\% accuracy in all dis
 
 ###
 
-Overall, our model performed ____.
-
 A key constraint we encountered was the Gabor kernel used for feature extraction. We used default parameters in order to create the kernel, but it is likely that performance could be improved by doing some form of hyperparameter tuning, in order to find the optimal parameters for the kernel.
 
 Additionally, more images to train the model would likely result in increased accuracy.
