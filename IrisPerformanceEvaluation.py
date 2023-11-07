@@ -26,7 +26,7 @@ def getCRRCurve(train,test):
     plt.figure()
     for i in range(len(dimension)):
         print('Currently computing dimension %d' %dimension[i])
-        vec.append(IrisMatching(training_data=train,testing_data=test,LDA_components=dimension[i], distanceMeasure=3))
+        vec.append(IrisMatching_Rotation(rotated_training_data=train,testing_data=test,LDA_components=dimension[i], distanceMeasure=3))
     lw = 2
 
     plt.plot(dimension, vec, color='darkorange',lw=lw)
@@ -56,7 +56,7 @@ def getPCACurve(train,test):
         for i in range(len(dimension)):
             ans = []
             print('Currently computing dimension %d' %dimension[i])
-            ans.append(IrisMatching(training_data=train,testing_data=test,LDA_components= dimension[i], distanceMeasure=3))
+            ans.append(IrisMatching_Rotation(rotated_training_data=train,testing_data=test,LDA_components= dimension[i], distanceMeasure=3))
         vec.append(min(ans))
     lw = 2
 
@@ -77,7 +77,7 @@ def getTable(train,test):
     for i in range(1,4):
         print('Currently computing distance measure number %d' %i)
         for dim in range(2):
-            vec.append(IrisMatching(train,test,LDA_components=dimension[dim],distanceMeasure=i))
+            vec.append(IrisMatching_Rotation(train,test,LDA_components=dimension[dim],distanceMeasure=i))
     vec = np.array(vec).reshape(3,2)
     vec = pd.DataFrame(vec)
     vec.index = ['L1 distance measure', 'L2 distance measure','Cosine similarity measure']
@@ -102,8 +102,8 @@ def getPCA(train, test, pca_component=110):
     
     for dim in dimensions:
         for distance in distance_metrics:
-            # Call the IrisMatching function with the transformed data
-            accuracy = IrisMatching(training_data=train_transformed, testing_data=test_transformed, LDA_components=dim, distanceMeasure=distance)
+            # Call the IrisMatching_Rotation function with the transformed data
+            accuracy = IrisMatching_Rotation(rotated_training_data=train_transformed, testing_data=test_transformed, LDA_components=dim, distanceMeasure=distance)
             
             # Append the result for each LDA dimension and distance metric
             results.append({
@@ -120,7 +120,7 @@ def getPCA(train, test, pca_component=110):
     print(results_df)
     return results_df
 
-# Assume IrisMatching is defined elsewhere and works as expected.
+# Assume IrisMatching_Rotation is defined elsewhere and works as expected.
 # This function would then be called with the training and testing datasets.
 
     

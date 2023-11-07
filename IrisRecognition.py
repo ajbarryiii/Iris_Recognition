@@ -54,27 +54,14 @@ def runAll():
 def runAll_test():
 
     try:
-        trainBase = create_rotated_training_data()
-        testBase = create_test_data()
-        irisTrain = np.array(trainBase)
-        np.save('irisTrain',irisTrain)
-        irisTest = np.array(testBase)
-        np.save('irisTest',irisTest)
-        train = trainBase
-        test = testBase
-    
-    except Exception as e:
-        print(f"Error generating training data: {e}")
-    
-    #try:
         # After transferring the image into a vector, get performance evaluation by
         # calculating Accuracy curve for different PCA dimension reduction,
         # CRR Curve, and recognition results tables.
-        #train = np.load('irisTrain.npy')
-        #test = np.load('irisTest.npy')
-    #except Exception as e:
-        #print(f"Error loading numpy arrays: {e}")
-        #raise
+        train = np.load('irisTrain.npy')
+        test = np.load('irisTest.npy')
+    except Exception as e:
+        print(f"Error loading numpy arrays: {e}")
+        raise
     
     try:
         # Plot accuracy curve for different dimensionality of the LDA

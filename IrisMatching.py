@@ -203,7 +203,7 @@ def IrisMatching_Rotation(rotated_training_data ,testing_data ,LDA_components,di
         shortestDistanceIndex = np.argmin(dist_vector)
         predicted[i] = trainClass[shortestDistanceIndex]
     # set predicted to be a np.array
-    predicted = np.array(predicted,dtype =np.int)
+    predicted = np.array(predicted)
     # calculate accuracy rate
     accuracyRate = 1 - sum(predicted != Y_test)/len(Y_test)
     # return accuracy rate
