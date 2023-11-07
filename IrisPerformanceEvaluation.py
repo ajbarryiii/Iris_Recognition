@@ -86,6 +86,41 @@ def getTable(train,test):
     return vec
 
 
+def getPCA(train, test, pca_component=110):
+    train1 = train.copy()
+    test1 = test.copy()
     
+    dimensions = [90, 100, 107]
+    distance_metrics = [1, 2, 3]
+    results = []
+
+    # Apply PCA with 110 components
+    pca = PCA(n_components=pca_component)
+    pca.fit(train1)
+    train_transformed = pca.transform(train1)
+    test_transformed = pca.transform(test1)
     
+    for dim in dimensions:
+        for distance in distance_metrics:
+            # Call the IrisMatching function with the transformed data
+            accuracy = IrisMatching(training_data=train_transformed, testing_data=test_transformed, LDA_components=dim, distanceMeasure=distance)
+            
+            # Append the result for each LDA dimension and distance metric
+            results.append({
+                'LDA_Dimension': dim,
+                'Distance_Metric': distance,
+                'PCA': pca_component,
+                'Accuracy': accuracy
+            })
+
+            print(f'PCA {pca_component} - LDA {dim} - Distance {distance} - Accuracy: {accuracy}')
+
+    # Convert results to a pandas DataFrame for a nice table format
+    results_df = pd.DataFrame(results)
+    print(results_df)
+    return results_df
+
+# Assume IrisMatching is defined elsewhere and works as expected.
+# This function would then be called with the training and testing datasets.
+
     
