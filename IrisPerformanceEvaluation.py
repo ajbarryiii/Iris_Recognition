@@ -47,38 +47,44 @@ def getCRRCurve(train, test):
     plt.title('Recognition results using features of different dimensionality')
     plt.legend()
     plt.show()
-    
+
 # Similar to getCRRCurve(), this function plots the accuracy rate for different
 # dimensions for PCA. Within each PCA dimension, the maximum accuracy rate was 
 # calculated by trying LDA dimensions of 90,100,107 which approves to be the dimensions
 # with highest accuracy rate in general
-def getPCACurve(train,test):
+def getPCACurve(train, test):
     train1 = train.copy()
     test1 = test.copy()
-    vec = []
-    pca = [400,550,600,650,1000]
-    dimension = [90,100,107]
-    plt.figure()
-    for p in range(len(pca)):
-        thisPCA = PCA(n_components=pca[p])
-        thisPCA.fit(train1)
-        train = thisPCA.transform(train1)
-        test  = thisPCA.transform(test1)
-        for i in range(len(dimension)):
-            ans = []
-            print('Currently computing dimension %d' %dimension[i])
-            ans.append(IrisMatching_Rotation(rotated_training_data=train,testing_data=test,LDA_components= dimension[i], distanceMeasure=3))
-        vec.append(min(ans))
-    lw = 2
-
-    plt.plot(pca, vec, color='darkorange',lw=lw)
-    plt.xlabel('Dimensionality of the feature vector')
-    plt.ylabel('Correct recgnition rate')
-    plt.title('Recognition results using features of different dimensionality')
-    plt.scatter(pca,vec,marker='*')
-
-    plt.show()
-
+    
+    pca_components = [400, 500, 600, 700, 800, 1000, 1200, 1400]
+    lda_dimensions = [90, 100, 107]  # Assuming these are the LDA dimensions you want to plot
+    
+    plt.figure(figsize=(10, 6))
+    
+    # Loop over each LDA dimension
+    for dim in lda_dimensions:
+        vec = []
+        for pca_comp in pca_components:
+            thisPCA = PCA(n_components=pca_comp)
+            thisPCA.fit(train1)
+            train_pca = thisPCA.transform(train1)
+            test_pca = thisPCA.transform(test1)
+            
+            # Compute the Iris Matching Rotation for the current dimension and PCA component
+            recognition_rate = IrisMatching_Rotation(rotated_training_data=train_pca, testing_data=test_pca, LDA_components=dim, distanceMeasure=3)
+            
+            vec.append(recognition_rate)
+        
+        lw = 2
+        # Plot the curve for this dimension
+        plt.plot(pca_components, vec, lw=lw, label='LDA Dimension {}'.format(dim))
+    
+    plt.xlabel('Number of PCA Components')
+    plt.ylabel('Correct Recognition Rate')
+    plt.title('Recognition Results using PCA with Different LDA Dimensions')
+    
+    # Add a legend to the plot
+    plt.legend()
 
 # This function prints the table of recognition results using different 
 # similarity measures

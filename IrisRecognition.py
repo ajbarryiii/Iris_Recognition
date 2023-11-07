@@ -43,7 +43,7 @@ def runAll():
     test = np.load('irisTest.npy')
     
     # Plot accuracy curve for different dimension reduction using PCA
-    (train,test)
+    getPCACurve(train,test)
     
     # Plot accuracy curve for different dimensionality of the LDA
     getCRRCurve(train,test)
@@ -65,7 +65,7 @@ def runAll_test():
     
     try:
         # Plot accuracy curve for different dimensionality of the LDA
-        getCRRCurve(train, test)
+        getPCACurve(train, test)
     except Exception as e:
         print(f"Error during PCA curve generation: {e}")
         raise
