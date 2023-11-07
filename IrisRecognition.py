@@ -69,7 +69,7 @@ def runAll_test():
     except Exception as e:
         print(f"Error during PCA curve generation: {e}")
         raise
-    
+
 # Call the main function
 if __name__ == "__main__":
     main()
