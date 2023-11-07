@@ -56,7 +56,7 @@ def getPCACurve(train,test):
     test1 = test.copy()
     vec = []
     pca = [400,500,600,700,800,1000, 1200, 1400]
-    dimension = [100]
+    dimension = [90, 100, 107]
     plt.figure()
     for p in range(len(pca)):
         thisPCA = PCA(n_components=pca[p])
@@ -67,7 +67,7 @@ def getPCACurve(train,test):
             ans = []
             print('Currently computing dimension %d' %dimension[i])
             ans.append(IrisMatching_Rotation(rotated_training_data=train,testing_data=test,LDA_components= dimension[i], distanceMeasure=3))
-        vec.append(min(ans))
+        vec.append(max(ans))
     lw = 2
 
     plt.plot(pca, vec, color='darkorange',lw=lw)

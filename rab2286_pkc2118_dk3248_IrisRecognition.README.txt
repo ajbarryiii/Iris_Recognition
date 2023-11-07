@@ -10,7 +10,17 @@ The image is then enhanced before feature extraction. Feature extraction is then
 
 ###
 
-Add details about performance
+Overall, when we combine PCA and LDA, our model reaches 80\% accuracy in all distance metrics using both a reduced LDA model and a full model. The results are summarized in the table below:
+
+| LDA_Dimension | Distance_Metric | PCA   | Accuracy |
+|---------------|-----------------|-------|----------|
+| 90            | 1               | 1100  | 0.814815 |
+| 90            | 2               | 1100  | 0.821759 |
+| 90            | 3               | 1100  | 0.879630 |
+| 107           | 1               | 1100  | 0.821759 |
+| 107           | 2               | 1100  | 0.847222 |
+| 107           | 3               | 1100  | 0.884259 |
+
 
 ###
 
